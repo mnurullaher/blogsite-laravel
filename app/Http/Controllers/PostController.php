@@ -10,8 +10,16 @@ class PostController extends Controller
 
     public function index() {
         return view('posts.index', [
-            'posts' => Post::all()
+            'posts' => Post::latest()->filter(request(['user']))->get()
         ]);
+    }
+
+    public function show(Post $post) {
+
+        return view('posts.show', [
+            'post' => $post
+        ]);
+
     }
 
     public function create()
