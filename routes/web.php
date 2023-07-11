@@ -17,13 +17,15 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', [PostController::class, 'index']);
 
-Route::get('/register', [UserController::class, 'create']);
+Route::get('/register', [UserController::class, 'create'])->middleware('guest');
 Route::post('/users', [UserController::class, 'store']);
-Route::post('/logout', [UserController::class, 'logout']);
-Route::get('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
+Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
 
-Route::get('posts/create', [PostController::class, 'create']);
-Route::post('/posts', [PostController::class, 'store']);
+Route::get('posts/create', [PostController::class, 'create'])->middleware('auth');
+Route::post('/posts', [PostController::class, 'store'])->middleware('auth');
+Route::put('/posts/like/{post}', [PostController::class, 'like'])->middleware('auth');
+Route::put('/posts/unlike/{post}', [PostController::class, 'unlike']);
 
 Route::get('/posts/{post}', [PostController::class, 'show']);

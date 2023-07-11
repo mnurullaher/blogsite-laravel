@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    use \Conner\Likeable\Likeable;
     use HasFactory;
 
     protected $fillable = ['title', 'body', 'user_id'];

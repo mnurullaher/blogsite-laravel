@@ -39,4 +39,14 @@ class PostController extends Controller
         Post::create($formFields);
         return redirect('/');
     }
+
+    public function like(Post $post) {
+        $post->like();
+        return back();
+    }
+
+    public function unlike(Post $post) {
+        $post->unlike(auth()->id());
+        return back();
+    }
 }
