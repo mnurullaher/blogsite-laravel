@@ -9,7 +9,7 @@
                 <div class="border border-gray-200 w-full mb-6"></div>
                 <div class="flex justify-center flex-col items-center w-full">
                     <div class="text-left">
-                        {{ $post->body }}
+                        <p>{!! $post->body !!}</p>
                     </div>
 
                     <div class="flex">
@@ -32,9 +32,7 @@
                     <form action="/posts/{{ $post->id }}/comment" method="POST" class="mt-4 w-10/12">
                         @csrf
                         <div class="mb-6 text-left">
-                            <label for="comment" class="text-sm">Leave a comment</label>
-                            <textarea class="border border-gray-200 rounded p-2 w-full" name="comment">
-                            </textarea>
+                            <textarea class="border border-gray-200 rounded p-2 w-full ckeditor form-control" name="comment"></textarea>
                             @error('comment')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -47,10 +45,12 @@
 
                     <div class="w-10/12">
                         @unless ($post->commentCount() == 0)
+                        <h1 class="mb-1">Comments</h2>
                             @foreach ($post->comments as $comment)
                                 <x-card class="w-full bg-white text-left">
                                     <div>
-                                        {{$comment->body}}
+                                        <p>{!! $comment->body !!}</p>
+                                        
                                     </div>
                                 </x-card>
                                 <div class="mb-2 text-right">
