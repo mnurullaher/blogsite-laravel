@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -47,6 +49,19 @@ class PostController extends Controller
 
     public function unlike(Post $post) {
         $post->unlike(auth()->id());
+        return back();
+    }
+
+    public function comment(Post $post, Request $request ) {
+        $commentBody = $request->validate([
+            'comment' => 'required'
+        ]);
+
+        $post->comment([
+            'title' => 'Some title',
+            'body' => $commentBody['comment'],
+        ], auth()->user());
+
         return back();
     }
 }

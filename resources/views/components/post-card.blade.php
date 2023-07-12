@@ -9,6 +9,7 @@
             <div class="text-xs mt-4">
                 <a href="/?user={{ $post->user->id }}">{{ 'By ' . $post->user->name }}</a>
                 <p>{{'Likes: ' . $post->likeCount}}</p>
+                <p>{{'Comments: ' . $post->commentCount()}}</p>
             </div>
         </div>
     </div>

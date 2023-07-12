@@ -27,5 +27,6 @@ Route::get('posts/create', [PostController::class, 'create'])->middleware('auth'
 Route::post('/posts', [PostController::class, 'store'])->middleware('auth');
 Route::put('/posts/like/{post}', [PostController::class, 'like'])->middleware('auth');
 Route::put('/posts/unlike/{post}', [PostController::class, 'unlike']);
+Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->middleware('auth');
 
 Route::get('/posts/{post}', [PostController::class, 'show']);

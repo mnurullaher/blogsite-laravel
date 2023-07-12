@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Artisanry\Commentable\Traits\HasComments;
 
 class Post extends Model
 {
     use \Conner\Likeable\Likeable;
     use HasFactory;
+    use HasComments;
 
     protected $fillable = ['title', 'body', 'user_id'];
 
