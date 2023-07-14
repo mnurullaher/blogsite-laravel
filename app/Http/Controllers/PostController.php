@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
 use App\Services\PostService;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\StorePostRequest;

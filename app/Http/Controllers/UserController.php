@@ -2,27 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\LoginRequest;
+use App\Services\UserService;
+use App\Http\Requests\StoreUserRequest;
 
 class UserController extends Controller
 {
+    public function __construct(protected UserService $service){}
 
     public function create() {
         return view('users.register');
     }
 
-    public function store(Request $request) {
-        $formFields = $request->validate([
-            'name' => 'required',
-            'email' => ['required', Rule::unique('users', 'email')],
-            'password' => ['required', 'confirmed']
-        ]);
+    public function store(StoreUserRequest $request) {
 
-        $user = User::create($formFields);
-        auth()->login($user);
-
+        $this->service->store($request);
         return redirect('/');
     }
 
@@ -30,17 +24,8 @@ class UserController extends Controller
         return view('users.login');
     }
 
-    public function authenticate(Request $request) {
-        $formFields = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
-        ]);
-
-        if(auth()->attempt($formFields)) {
-            $request->session()->regenerate();
-
-            return redirect('/');
-        }
+    public function authenticate(LoginRequest $request) {
+        $this->service->authenticate($request);
 
         return back()->withErrors(['email'=>'Invalid Credentials'])
         ->onlyInput('email');
