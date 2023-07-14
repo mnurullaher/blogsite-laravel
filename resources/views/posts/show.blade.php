@@ -1,9 +1,15 @@
 <x-layout>
 
     <a href={{ '/' }} class="inline-block text-black ml-4 mb-4"><i class="fa-solid fa-arrow-left"></i> Back
-    </a>
-    <div class="mx-4">
+    </a>   
+    <div class="mx-4">       
         <x-card class="!p-10">
+            @if (auth()->id() == $post->user_id)
+            <div class="text-right">
+                <a href="/posts/{{ $post->id }}/edit" class="mr-1"><i class="fa-solid fa-pencil"></i>Edit</a>
+                <a href=""><i class="fa-solid fa-trash-can" style="color: #ff0000;"></i>Delete</a>
+            </div>    
+            @endif
             <div class="flex flex-col items-center justify-center text-center">
                 <h3 class="text-2xl mb-2">{{ $post->title }}</h3>
                 <div class="border border-gray-200 w-full mb-6"></div>
@@ -12,15 +18,17 @@
                         <p>{!! $post->body !!}</p>
                     </div>
 
+                    
+
                     <div class="flex">
                         @if ($post->liked())
-                            <form action="/posts/unlike/{{ $post->id }}" method="POST">
+                            <form action="/posts/{{ $post->id }}/unlike" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit"><i class="fa-solid fa-thumbs-down font-thin"></i> </button>
                             </form>
                         @else
-                            <form action="/posts/like/{{ $post->id }}" method="POST">
+                            <form action="/posts/{{ $post->id }}/like" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit"><i class="fa-solid fa-thumbs-up font-thin"></i> </button>

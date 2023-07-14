@@ -24,11 +24,22 @@ class PostService
     $this->postRepository->store($post);
   }
 
-  public function comment(Post $post, CommentRequest $request) {
-    $post->comment([
-      'title' => 'Some title',
-      'body' => $request->validated('comment')
-    ], auth()->user());
+  public function update(StorePostRequest $request, int $postId) {
+
+    $updatedFields = [
+      'title' => $request->validated('title'),
+      'body' => $request->validated('body'),
+    ];
+
+    $this->postRepository->update($postId, $updatedFields );
+  }
+
+  public function comment(int $postId, CommentRequest $request) {
+    $commentFields = [
+        'title' => 'Will be handled later',
+        'body' => $request->validated('comment')
+      ];
+    $this->postRepository->comment($postId, $commentFields);
   }
 
   public function getLatestPosts($user) {

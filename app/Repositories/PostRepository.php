@@ -17,19 +17,27 @@ class PostRepository
   }
 
   public function getLatestPosts($user) {
-    return Post::latest()->filter($user)->simplePaginate(2);
+    return Post::latest()->filter($user)->simplePaginate(6);
   }
 
-  public function getById($id) {
+  public function getById(int $id) {
     return Post::find($id);
   }
 
-  public function like($id) {
+  public function like(int $id) {
     Post::find($id)->like();
   }
 
-  public function unlike($id) {
+  public function unlike(int $id) {
     Post::find($id)->unlike(auth()->id());
+  }
+
+  public function comment(int $id, $commentFields) {
+    Post::find($id)->comment($commentFields, auth()->user());
+  }
+
+  public function update(int $postId, $updatedFields ) {
+    Post::find($postId)->update($updatedFields);
   }
 
 }

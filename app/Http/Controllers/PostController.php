@@ -40,12 +40,27 @@ class PostController extends Controller
 
     public function unlike(int $post) {
         $this->service->unlike($post);
-        // $post->unlike(auth()->id());
         return back();
     }
 
-    public function comment(Post $post, CommentRequest $request ) {
-        $this->service->comment($post, $request);
+    public function comment(int $postId, CommentRequest $request ) {
+        $this->service->comment($postId, $request);
         return back();
+    }
+
+    public function edit(int $post) {
+        $currentPost = $this->service->getById($post);  
+        if($currentPost->user_id != auth()->id()) {
+            abort(403, 'Unauthorized Action');
+        }
+
+        return view('posts.edit', [
+            'post' => $currentPost
+        ]);
+    }
+
+    public function update(StorePostRequest $request, int $postId) {
+        $this->service->update($request, $postId);
+        return redirect('/');
     }
 }
