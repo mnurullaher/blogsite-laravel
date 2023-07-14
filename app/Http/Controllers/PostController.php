@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\PostService;
+use App\Http\Requests\CommentRequest;
+use App\Http\Requests\StorePostRequest;
 
 class PostController extends Controller
 {
+
+    public function __construct(protected PostService $service){}
 
     public function index() {
         return view('posts.index', [
@@ -17,28 +19,17 @@ class PostController extends Controller
     }
 
     public function show(Post $post) {
-
         return view('posts.show', [
             'post' => $post
         ]);
-
     }
 
-    public function create()
-    {
+    public function create() {
         return view('posts.create');
     }
 
-    public function store(Request $request)
-    {
-        $formFields = $request->validate([
-            'title' => 'required',
-            'body' => 'required'
-        ]);
-
-        $formFields['user_id'] = auth()->id();
-
-        Post::create($formFields);
+    public function store(StorePostRequest $request) {
+        $this->service->store($request);
         return redirect('/');
     }
 
@@ -52,16 +43,8 @@ class PostController extends Controller
         return back();
     }
 
-    public function comment(Post $post, Request $request ) {
-        $commentBody = $request->validate([
-            'comment' => 'required'
-        ]);
-
-        $post->comment([
-            'title' => 'Some title',
-            'body' => $commentBody['comment'],
-        ], auth()->user());
-
+    public function comment(Post $post, CommentRequest $request ) {
+        $this->service->comment($post, $request);
         return back();
     }
 }
