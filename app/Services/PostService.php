@@ -31,4 +31,19 @@ class PostService
     ], auth()->user());
   }
 
+  public function getLatestPosts($user) {
+    return $this->postRepository->getLatestPosts($user);
+  }
+
+  public function getById($id) {
+    return $this->postRepository->getById($id);
+  }
+
+  public function like($id) {
+    $this->postRepository->like($id);
+  }
+
+  public function unlike($id) {
+    $this->postRepository->unlike($id);
+  }
 }

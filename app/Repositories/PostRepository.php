@@ -16,4 +16,20 @@ class PostRepository
     ]);
   }
 
+  public function getLatestPosts($user) {
+    return Post::latest()->filter($user)->get();
+  }
+
+  public function getById($id) {
+    return Post::find($id);
+  }
+
+  public function like($id) {
+    Post::find($id)->like();
+  }
+
+  public function unlike($id) {
+    Post::find($id)->unlike(auth()->id());
+  }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Http\Request;
 use App\Services\PostService;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\StorePostRequest;
@@ -14,13 +15,13 @@ class PostController extends Controller
 
     public function index() {
         return view('posts.index', [
-            'posts' => Post::latest()->filter(request(['user']))->get()
+            'posts' =>  $this->service->getLatestPosts(request(['user']))
         ]);
     }
 
-    public function show(Post $post) {
+    public function show(int $post) {
         return view('posts.show', [
-            'post' => $post
+            'post' => $this->service->getById($post)
         ]);
     }
 
@@ -33,13 +34,14 @@ class PostController extends Controller
         return redirect('/');
     }
 
-    public function like(Post $post) {
-        $post->like();
+    public function like(int $post) {
+        $this->service->like($post);
         return back();
     }
 
-    public function unlike(Post $post) {
-        $post->unlike(auth()->id());
+    public function unlike(int $post) {
+        $this->service->unlike($post);
+        // $post->unlike(auth()->id());
         return back();
     }
 
