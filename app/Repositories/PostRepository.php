@@ -17,7 +17,7 @@ class PostRepository
   }
 
   public function getLatestPosts($user) {
-    return Post::latest()->filter($user)->get();
+    return Post::latest()->filter($user)->simplePaginate(2);
   }
 
   public function getById($id) {
