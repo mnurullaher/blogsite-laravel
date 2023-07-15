@@ -16,8 +16,8 @@ class PostRepository
     ]);
   }
 
-  public function getLatestPosts($user) {
-    return Post::latest()->filter($user)->simplePaginate(6);
+  public function getLatestPosts(array $filters) {
+    return Post::latest()->filter($filters)->simplePaginate(6);
   }
 
   public function getById(int $id) {
@@ -36,8 +36,8 @@ class PostRepository
     Post::find($id)->comment($commentFields, auth()->user());
   }
 
-  public function update(int $postId, $updatedFields ) {
-    Post::find($postId)->update($updatedFields);
+  public function update(int $id, $updatedFields ) {
+    Post::find($id)->update($updatedFields);
   }
 
 }

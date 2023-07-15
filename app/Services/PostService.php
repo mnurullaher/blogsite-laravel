@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\DTO\PostDto;
-use App\Models\Post;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Repositories\PostRepository;
@@ -34,27 +33,27 @@ class PostService
     $this->postRepository->update($postId, $updatedFields );
   }
 
-  public function comment(int $postId, CommentRequest $request) {
+  public function comment(int $id, CommentRequest $request) {
     $commentFields = [
         'title' => 'Will be handled later',
         'body' => $request->validated('comment')
       ];
-    $this->postRepository->comment($postId, $commentFields);
+    $this->postRepository->comment($id, $commentFields);
   }
 
-  public function getLatestPosts($user) {
-    return $this->postRepository->getLatestPosts($user);
+  public function getLatestPosts(array $filters) {
+    return $this->postRepository->getLatestPosts($filters);
   }
 
-  public function getById($id) {
+  public function getById(int $id) {
     return $this->postRepository->getById($id);
   }
 
-  public function like($id) {
+  public function like(int $id) {
     $this->postRepository->like($id);
   }
 
-  public function unlike($id) {
+  public function unlike(int $id) {
     $this->postRepository->unlike($id);
   }
 }

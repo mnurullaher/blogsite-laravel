@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Services\PostService;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\StorePostRequest;
@@ -18,9 +17,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function show(int $post) {
+    public function show(int $id) {
         return view('posts.show', [
-            'post' => $this->service->getById($post)
+            'post' => $this->service->getById($id)
         ]);
     }
 
@@ -33,23 +32,23 @@ class PostController extends Controller
         return redirect('/');
     }
 
-    public function like(int $post) {
-        $this->service->like($post);
+    public function like(int $id) {
+        $this->service->like($id);
         return back();
     }
 
-    public function unlike(int $post) {
-        $this->service->unlike($post);
+    public function unlike(int $id) {
+        $this->service->unlike($id);
         return back();
     }
 
-    public function comment(int $postId, CommentRequest $request ) {
-        $this->service->comment($postId, $request);
+    public function comment(int $id, CommentRequest $request ) {
+        $this->service->comment($id, $request);
         return back();
     }
 
-    public function edit(int $post) {
-        $currentPost = $this->service->getById($post);  
+    public function edit(int $id) {
+        $currentPost = $this->service->getById($id);  
         if($currentPost->user_id != auth()->id()) {
             abort(403, 'Unauthorized Action');
         }
@@ -59,8 +58,8 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(StorePostRequest $request, int $postId) {
-        $this->service->update($request, $postId);
+    public function update(StorePostRequest $request, int $id) {
+        $this->service->update($request, $id);
         return redirect('/');
     }
 }
