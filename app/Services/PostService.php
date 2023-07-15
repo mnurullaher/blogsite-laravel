@@ -23,14 +23,14 @@ class PostService
     $this->postRepository->store($post);
   }
 
-  public function update(StorePostRequest $request, int $postId) {
+  public function update(StorePostRequest $request, int $id) {
 
     $updatedFields = [
       'title' => $request->validated('title'),
       'body' => $request->validated('body'),
     ];
 
-    $this->postRepository->update($postId, $updatedFields );
+    $this->postRepository->update($id, $updatedFields );
   }
 
   public function comment(int $id, CommentRequest $request) {
@@ -55,5 +55,9 @@ class PostService
 
   public function unlike(int $id) {
     $this->postRepository->unlike($id);
+  }
+
+  public function delete(int $id) {
+    $this->postRepository->delete($id);
   }
 }

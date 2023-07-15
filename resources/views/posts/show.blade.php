@@ -7,7 +7,11 @@
             @if (auth()->id() == $post->user_id)
             <div class="text-right">
                 <a href="/posts/{{ $post->id }}/edit" class="mr-1"><i class="fa-solid fa-pencil"></i>Edit</a>
-                <a href=""><i class="fa-solid fa-trash-can" style="color: #ff0000;"></i>Delete</a>
+                <form method="POST" action="/posts/{{$post->id}}">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-500"><i class="fa-solid fa-trash-can"></i>Delete</button>
+                </form>
             </div>    
             @endif
             <div class="flex flex-col items-center justify-center text-center">

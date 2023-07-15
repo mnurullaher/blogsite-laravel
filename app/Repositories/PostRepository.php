@@ -40,4 +40,8 @@ class PostRepository
     Post::find($id)->update($updatedFields);
   }
 
+  public function delete(int $id) {
+    Post::find($id)->delete();
+  }
+
 }

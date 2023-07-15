@@ -62,4 +62,13 @@ class PostController extends Controller
         $this->service->update($request, $id);
         return redirect('/');
     }
+
+    public function delete(int $id) {
+        $currentPost = $this->service->getById($id);  
+        if($currentPost->user_id != auth()->id()) {
+            abort(403, 'Unauthorized Action');
+        }
+        $this->service->delete($id);
+        return redirect('/');
+    }
 }
