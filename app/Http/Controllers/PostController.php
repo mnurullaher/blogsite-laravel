@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\PostService;
 use App\Http\Requests\CommentRequest;
 use App\Http\Requests\StorePostRequest;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
@@ -48,7 +49,7 @@ class PostController extends Controller
     }
 
     public function edit(int $id) {
-        $currentPost = $this->service->getById($id);  
+        $currentPost = $this->service->getById($id);
         if($currentPost->user_id != auth()->id()) {
             abort(403, 'Unauthorized Action');
         }
@@ -64,7 +65,7 @@ class PostController extends Controller
     }
 
     public function delete(int $id) {
-        $currentPost = $this->service->getById($id);  
+        $currentPost = $this->service->getById($id);
         if($currentPost->user_id != auth()->id()) {
             abort(403, 'Unauthorized Action');
         }
