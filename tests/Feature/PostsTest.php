@@ -63,7 +63,7 @@ class PostsTest extends TestCase
         $response->assertSee('Post Body');
     }
 
-    public function test_store_method_storing_post_to_database_for_authenticated_users() {
+    public function test_store_functionality_working_properly_respect_to_authentication() {
         $post = $this->createPost()->toArray();
     
         $unAuthorizedResponse = $this->post('/posts', $post);
@@ -97,6 +97,39 @@ class PostsTest extends TestCase
         $authorizedResponse->assertSee($post->body);
     }
 
+    public function test_update_functionality_working_properly() {
+        $post = $this->createPost();
+
+        $response = $this->actingAs($this->user)->put('/posts/' . $post->id, [
+            'title' => 'Updated Title',
+            'body' => 'Updated Body'
+        ]);
+
+        $updatedPost = Post::find($post->id);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $this->assertEquals('Updated Title', $updatedPost->title);
+        $this->assertEquals('Updated Body', $updatedPost->body);
+
+        $unValidatedResponse = $this->actingAs($this->user)->put('/posts/' . $post->id, [
+            'title' => '',
+            'body' => ''
+        ]);
+
+        $unValidatedResponse->assertStatus(302);
+        $unValidatedResponse->assertInvalid(['title', 'body']);   
+    }
+
+    public function test_delete_functionality_working_properly() {
+        $post = $this->createPost();
+
+        $response = $this->actingAs($this->user)->delete('posts/' . $post->id);
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/');
+        $this->assertDatabaseMissing('posts', $post->toArray());
+    }
     
 
     private function createPost(): Post {
