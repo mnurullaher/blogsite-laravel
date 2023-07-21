@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\utils\TestUtils;
 
 class PostsTest extends TestCase
 {
@@ -19,7 +20,7 @@ class PostsTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user = TestUtils::createUser();
     }
    
     public function test_empty_index_page_rendered()
@@ -33,7 +34,7 @@ class PostsTest extends TestCase
 
     public function test_non_empty_index_page_rendered() {
     
-        $post = $this->createPost();
+        $post = TestUtils::createPost($this->user->id);
 
         $response = $this->get('/');
 
@@ -45,7 +46,7 @@ class PostsTest extends TestCase
 
     public function test_show_post_page_rendered()
     {
-        $post = $this->createPost();
+        $post = TestUtils::createPost($this->user->id);
         
         $response = $this->get('/posts/' . $post->id);
 
@@ -64,7 +65,7 @@ class PostsTest extends TestCase
     }
 
     public function test_store_functionality_working_properly_respect_to_authentication() {
-        $post = $this->createPost()->toArray();
+        $post = TestUtils::createPost($this->user->id)->toArray();
     
         $unAuthorizedResponse = $this->post('/posts', $post);
 
@@ -83,7 +84,7 @@ class PostsTest extends TestCase
     }
 
     public function test_edit_page_rendered_only_for_authorized_user() {
-        $post = $this->createPost();
+        $post = TestUtils::createPost($this->user->id);
 
         $unAuthorizedResponse = $this->get('/posts/' . $post->id . '/edit');
 
@@ -98,7 +99,7 @@ class PostsTest extends TestCase
     }
 
     public function test_update_functionality_working_properly() {
-        $post = $this->createPost();
+        $post = TestUtils::createPost($this->user->id);
 
         $response = $this->actingAs($this->user)->put('/posts/' . $post->id, [
             'title' => 'Updated Title',
@@ -122,21 +123,12 @@ class PostsTest extends TestCase
     }
 
     public function test_delete_functionality_working_properly() {
-        $post = $this->createPost();
+        $post = TestUtils::createPost($this->user->id);
 
         $response = $this->actingAs($this->user)->delete('posts/' . $post->id);
 
         $response->assertStatus(302);
         $response->assertRedirect('/');
         $this->assertDatabaseMissing('posts', $post->toArray());
-    }
-    
-
-    private function createPost(): Post {
-        return Post::create([
-            'title' => 'Test Title',
-            'body' => 'Test Body',
-            'user_id' => $this->user->id
-        ]);
     }
 }
