@@ -29,7 +29,7 @@ Route::put('/posts/{post}/like', [PostController::class, 'like'])->middleware('a
 Route::put('/posts/{post}/unlike', [PostController::class, 'unlike']);
 Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->middleware('auth');
 Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
-Route::put('/posts/{post}', [PostController::class, 'update']);
-Route::delete('/posts/{post}', [PostController::class, 'delete']);
+Route::put('/posts/{post}', [PostController::class, 'update'])->middleware('auth');
+Route::delete('/posts/{post}', [PostController::class, 'delete'])->middleware('auth');
 
 Route::get('/posts/{post}', [PostController::class, 'show']);

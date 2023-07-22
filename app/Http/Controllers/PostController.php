@@ -60,7 +60,13 @@ class PostController extends Controller
     }
 
     public function update(StorePostRequest $request, int $id) {
+        $currentPost = $this->service->getById($id);
+        if($currentPost->user_id != auth()->id()) {
+            abort(403, 'Unauthorized Action');
+        }
+
         $this->service->update($request, $id);
+
         return redirect('/');
     }
 
@@ -69,7 +75,9 @@ class PostController extends Controller
         if($currentPost->user_id != auth()->id()) {
             abort(403, 'Unauthorized Action');
         }
+
         $this->service->delete($id);
+        
         return redirect('/');
     }
 }

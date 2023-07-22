@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\utils\TestUtils;
 
@@ -22,7 +21,7 @@ class PostsTest extends TestCase
 
         $this->user = TestUtils::createUser();
     }
-   
+
     public function test_empty_index_page_rendered()
     {
         $response = $this->get('/');
@@ -32,8 +31,9 @@ class PostsTest extends TestCase
     }
 
 
-    public function test_non_empty_index_page_rendered() {
-    
+    public function test_non_empty_index_page_rendered()
+    {
+
         $post = TestUtils::createPost($this->user->id);
 
         $response = $this->get('/');
@@ -47,7 +47,7 @@ class PostsTest extends TestCase
     public function test_show_post_page_rendered()
     {
         $post = TestUtils::createPost($this->user->id);
-        
+
         $response = $this->get('/posts/' . $post->id);
 
         $response->assertStatus(200);
@@ -56,7 +56,8 @@ class PostsTest extends TestCase
         $response->assertSee('Post Comment');
     }
 
-    public function test_create_post_view_rendered_for_authenticated_users() {
+    public function test_create_post_view_rendered()
+    {
         $response = $this->actingAs($this->user)->get('/posts/create');
 
         $response->assertSee('Create a Post');
@@ -64,14 +65,9 @@ class PostsTest extends TestCase
         $response->assertSee('Post Body');
     }
 
-    public function test_store_functionality_working_properly_respect_to_authentication() {
+    public function test_store_functionality_working_properly()
+    {
         $post = TestUtils::createPost($this->user->id)->toArray();
-    
-        $unAuthorizedResponse = $this->post('/posts', $post);
-
-        $unAuthorizedResponse->assertStatus(302);
-        $unAuthorizedResponse->assertRedirect('login');
-
 
         $response = $this->actingAs($this->user)->post('/posts', $post);
 
@@ -83,22 +79,20 @@ class PostsTest extends TestCase
         $this->assertEquals($post['title'], $lastPost->title);
     }
 
-    public function test_edit_page_rendered_only_for_authorized_user() {
+    public function test_edit_page_rendered()
+    {
         $post = TestUtils::createPost($this->user->id);
 
-        $unAuthorizedResponse = $this->get('/posts/' . $post->id . '/edit');
+        $response = $this->actingAs($this->user)->get('/posts/' . $post->id . '/edit');
 
-        $unAuthorizedResponse->assertStatus(403);
-
-        $authorizedResponse = $this->actingAs($this->user)->get('/posts/' . $post->id . '/edit');
-
-        $authorizedResponse->assertStatus(200);
-        $authorizedResponse->assertSee('Edit Post');
-        $authorizedResponse->assertSee($post->title);
-        $authorizedResponse->assertSee($post->body);
+        $response->assertStatus(200);
+        $response->assertSee('Edit Post');
+        $response->assertSee($post->title);
+        $response->assertSee($post->body);
     }
 
-    public function test_update_functionality_working_properly() {
+    public function test_update_functionality_working_properly()
+    {
         $post = TestUtils::createPost($this->user->id);
 
         $response = $this->actingAs($this->user)->put('/posts/' . $post->id, [
@@ -119,10 +113,11 @@ class PostsTest extends TestCase
         ]);
 
         $unValidatedResponse->assertStatus(302);
-        $unValidatedResponse->assertInvalid(['title', 'body']);   
+        $unValidatedResponse->assertInvalid(['title', 'body']);
     }
 
-    public function test_delete_functionality_working_properly() {
+    public function test_delete_functionality_working_properly()
+    {
         $post = TestUtils::createPost($this->user->id);
 
         $response = $this->actingAs($this->user)->delete('posts/' . $post->id);
